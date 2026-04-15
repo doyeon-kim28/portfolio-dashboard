@@ -8,111 +8,197 @@
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
 :root {
-    --ink: #0F172A; --sub: #475569; --muted: #94A3B8;
-    --line: #E2E8F0; --accent: #1E3A8A; --bg: #FAFAFA;
+    --ink: #0B1120; --sub: #475569; --muted: #94A3B8;
+    --line: #EEF2F7; --accent: #4F46E5; --accent2: #7C3AED;
+    --bg: #F6F7FB; --card: #FFFFFF;
+    --grad: linear-gradient(135deg, #4F46E5 0%, #7C3AED 60%, #DB2777 100%);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 html, body {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: var(--ink); letter-spacing: -0.01em; background: var(--bg);
     -webkit-font-smoothing: antialiased;
 }
-h1, h2, h3, h4 { font-weight: 600; letter-spacing: -0.025em; color: var(--ink); }
+h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
 a { color: var(--accent); text-decoration: none; }
 
-.layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+.layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
 
 aside {
-    background: white; border-right: 1px solid var(--line);
-    padding: 2.5rem 1.8rem; position: sticky; top: 0; height: 100vh;
+    background: var(--card);
+    padding: 2.6rem 1.8rem; position: sticky; top: 0; height: 100vh;
     overflow-y: auto;
+    border-right: 1px solid var(--line);
 }
-aside .eyebrow { margin-bottom: 0.4rem; }
-aside .name { font-size: 1.3rem; font-weight: 700; color: var(--ink); }
-aside .role { font-size: 0.82rem; color: var(--sub); margin-top: 0.15rem; }
-nav { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.1rem; }
+.brand { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.3rem; }
+.logo {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--grad);
+    box-shadow: 0 6px 18px -6px rgba(79, 70, 229, 0.55);
+}
+aside .name { font-size: 1.25rem; font-weight: 800; color: var(--ink); letter-spacing: -0.03em; }
+aside .role { font-size: 0.8rem; color: var(--sub); margin-top: 0.25rem; line-height: 1.5; }
+nav { margin-top: 2.2rem; display: flex; flex-direction: column; gap: 0.15rem; }
 nav a {
-    font-size: 0.9rem; color: var(--sub); padding: 0.55rem 0.8rem;
-    border-radius: 4px; cursor: pointer; transition: all 0.15s;
+    font-size: 0.9rem; color: var(--sub); padding: 0.65rem 0.9rem;
+    border-radius: 10px; cursor: pointer; transition: all 0.18s;
+    font-weight: 500; display: flex; align-items: center; gap: 0.7rem;
+}
+nav a::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--muted); opacity: 0.4; transition: all 0.18s;
 }
 nav a:hover { background: var(--bg); color: var(--ink); }
-nav a.active { background: var(--accent); color: white; }
-aside .contact { margin-top: 2.5rem; }
-aside .contact .small { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+nav a.active {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.08));
+    color: var(--accent); font-weight: 600;
+}
+nav a.active::before { background: var(--accent); opacity: 1; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); }
 
-main { padding: 3rem 3.5rem; max-width: 1160px; }
-section { display: none; animation: fade 0.25s ease; }
+aside .contact { margin-top: 2.6rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
+aside .contact .small { font-size: 0.82rem; color: var(--sub); line-height: 1.8; }
+aside .contact .small a { color: var(--sub); }
+
+.agent-badge {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.4rem 0.75rem; margin-top: 1.5rem;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(124, 58, 237, 0.06));
+    border: 1px solid rgba(79, 70, 229, 0.18);
+    border-radius: 999px; font-size: 0.72rem; color: var(--accent); font-weight: 600;
+    letter-spacing: 0.02em;
+}
+.agent-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--grad); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    animation: pulse 2.2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+main { padding: 3.5rem 4rem; max-width: 1200px; }
+section { display: none; animation: fade 0.35s ease; }
 section.active { display: block; }
-@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 .eyebrow {
-    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted); font-weight: 500; margin-bottom: 0.5rem;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 0.9rem;
+    display: inline-block;
 }
 .headline {
-    font-size: 2.3rem; font-weight: 700; color: var(--ink);
-    line-height: 1.25; margin: 0 0 0.7rem 0; letter-spacing: -0.03em;
+    font-size: 2.8rem; font-weight: 800; color: var(--ink);
+    line-height: 1.2; margin: 0 0 1rem 0; letter-spacing: -0.04em;
+}
+.headline .grad {
+    background: var(--grad); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; background-clip: text;
 }
 .lead {
-    font-size: 1rem; color: var(--sub); line-height: 1.7; font-weight: 400;
-    max-width: 720px; margin-bottom: 2.5rem;
+    font-size: 1.05rem; color: var(--sub); line-height: 1.75; font-weight: 400;
+    max-width: 740px; margin-bottom: 3rem;
 }
 .label {
-    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--muted); font-weight: 500; margin-bottom: 0.6rem;
+    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: 0.8rem;
 }
-.body { font-size: 0.88rem; color: var(--ink); line-height: 1.75; }
+.body { font-size: 0.92rem; color: var(--ink); line-height: 1.8; }
 .body.muted { color: var(--sub); }
-.small { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+.small { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
 
-.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 3rem; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 3.5rem; }
 .kpi {
-    border: 1px solid var(--line); border-radius: 4px;
-    padding: 1.3rem 1.4rem; background: white;
+    border: 1px solid var(--line); border-radius: 16px;
+    padding: 1.5rem 1.6rem; background: var(--card);
+    transition: all 0.22s; position: relative; overflow: hidden;
 }
-.kpi-value { font-size: 1.6rem; font-weight: 700; color: var(--ink); line-height: 1.15; letter-spacing: -0.02em; }
-.kpi-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.45rem; }
+.kpi::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--grad); opacity: 0; transition: opacity 0.22s;
+}
+.kpi:hover { transform: translateY(-3px); box-shadow: 0 12px 32px -16px rgba(15, 23, 42, 0.18); border-color: rgba(79, 70, 229, 0.25); }
+.kpi:hover::before { opacity: 1; }
+.kpi-value {
+    font-size: 1.8rem; font-weight: 800; line-height: 1.15; letter-spacing: -0.035em;
+    background: var(--grad); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; background-clip: text;
+}
+.kpi-label { font-size: 0.8rem; color: var(--sub); margin-top: 0.5rem; font-weight: 500; }
 
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
-.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3rem; }
+
+.panel {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 16px; padding: 1.8rem 2rem;
+}
 
 .card {
-    border: 1px solid var(--line); border-radius: 4px;
-    padding: 1.6rem; background: white; height: 100%;
+    border: 1px solid var(--line); border-radius: 16px;
+    padding: 1.8rem; background: var(--card); height: 100%;
+    transition: all 0.22s; position: relative;
 }
-.card h4 { margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--ink); font-weight: 600; }
-.card p { font-size: 0.88rem; color: var(--sub); line-height: 1.7; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -20px rgba(15, 23, 42, 0.2); border-color: rgba(79, 70, 229, 0.22); }
+.card h4 { margin-bottom: 0.7rem; font-size: 1rem; color: var(--ink); font-weight: 700; letter-spacing: -0.02em; }
+.card p { font-size: 0.9rem; color: var(--sub); line-height: 1.75; }
+.card .idx {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 0.8rem;
+}
 
-.project { border-top: 1px solid var(--line); padding: 2rem 0 1.5rem 0; }
-.project-num { font-size: 0.72rem; letter-spacing: 0.14em; color: var(--muted); font-weight: 500; }
-.project-title { font-size: 1.2rem; font-weight: 600; color: var(--ink); margin: 0.3rem 0 0.6rem 0; letter-spacing: -0.02em; }
-.project-sub { font-size: 0.9rem; color: var(--sub); margin-bottom: 1.4rem; line-height: 1.6; }
-.project ul { margin: 0; padding-left: 1.1rem; }
-.project li { margin-bottom: 0.5rem; font-size: 0.88rem; color: var(--ink); line-height: 1.75; }
+.project {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 18px; padding: 2rem 2.2rem; margin-bottom: 1.2rem;
+    transition: all 0.22s;
+}
+.project:hover { box-shadow: 0 18px 40px -20px rgba(15, 23, 42, 0.18); border-color: rgba(79, 70, 229, 0.2); }
+.project-num {
+    display: inline-block; font-size: 0.7rem; letter-spacing: 0.14em;
+    color: white; background: var(--grad); padding: 0.28rem 0.65rem;
+    border-radius: 999px; font-weight: 600; margin-bottom: 0.9rem;
+}
+.project-company { font-size: 0.82rem; color: var(--sub); margin-left: 0.6rem; font-weight: 500; }
+.project-title { font-size: 1.35rem; font-weight: 700; color: var(--ink); margin: 0.2rem 0 0.6rem 0; letter-spacing: -0.03em; }
+.project-sub { font-size: 0.95rem; color: var(--sub); margin-bottom: 1.6rem; line-height: 1.65; }
+.project ul { margin: 0; padding-left: 1.2rem; }
+.project li { margin-bottom: 0.55rem; font-size: 0.9rem; color: var(--ink); line-height: 1.75; }
 
-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: white; }
-th, td { padding: 0.7rem 1rem; text-align: left; font-size: 0.85rem; border-bottom: 1px solid var(--line); }
-th { background: var(--bg); color: var(--sub); font-weight: 500; font-size: 0.78rem; letter-spacing: 0.04em; }
+table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card);
+}
+th, td { padding: 0.85rem 1.1rem; text-align: left; font-size: 0.88rem; border-bottom: 1px solid var(--line); }
+th { background: var(--bg); color: var(--sub); font-weight: 600; font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase; }
 tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(79, 70, 229, 0.02); }
 
-.chart { background: white; border: 1px solid var(--line); border-radius: 4px; padding: 1rem; }
+.chart { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.5rem; }
+
+.footer {
+    margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line);
+    font-size: 0.78rem; color: var(--muted); display: flex; justify-content: space-between; align-items: center;
+}
 
 @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }
-    aside { position: static; height: auto; }
-    main { padding: 2rem 1.5rem; }
+    aside { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+    main { padding: 2.2rem 1.5rem; }
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-    .two-col, .three-col { grid-template-columns: 1fr; gap: 1.5rem; }
-    .headline { font-size: 1.7rem; }
+    .two-col, .three-col { grid-template-columns: 1fr; gap: 1.2rem; }
+    .headline { font-size: 1.9rem; }
 }
 </style>
 </head>
 <body>
 <div class="layout">
 <aside>
-    <div class="eyebrow">Portfolio</div>
-    <div class="name">김도연</div>
-    <div class="role">NAVER Cloud · Cloud Product Synergy</div>
+    <div class="brand">
+        <div class="logo"></div>
+        <div>
+            <div class="name">김도연</div>
+        </div>
+    </div>
+    <div class="role">NAVER Cloud<br>Cloud Product Synergy</div>
+    <div class="agent-badge"><span class="dot"></span>Built with Claude Agent</div>
     <nav>
         <a data-section="overview" class="active">개요</a>
         <a data-section="experience">경력</a>
@@ -121,8 +207,8 @@ tr:last-child td { border-bottom: none; }
         <a data-section="credentials">자격 · 학력</a>
     </nav>
     <div class="contact">
-        <div class="eyebrow">Contact</div>
-        <div class="small">jjuncco@naver.com<br>010-2079-0828<br>성남 분당구 서현</div>
+        <div class="label">Contact</div>
+        <div class="small"><a href="mailto:jjuncco@naver.com">jjuncco@naver.com</a><br>010-2079-0828</div>
     </div>
 </aside>
 
@@ -130,7 +216,7 @@ tr:last-child td { border-bottom: none; }
 
 <section id="overview" class="active">
     <div class="eyebrow">Profile</div>
-    <h1 class="headline">임상 현장의 엄밀함과 SaaS의 속도를 함께 운영합니다.</h1>
+    <h1 class="headline">임상 현장의 엄밀함과<br><span class="grad">SaaS의 속도</span>를 함께 운영합니다.</h1>
     <p class="lead">대학병원 의료사회복지 실무에서 NAVER Cloud B2B SaaS 운영까지, 6년 이상 현장과 시스템을 잇는 운영 경험을 이어왔습니다. 사용자가 실제로 적응하고 성장하는 구조를 설계합니다.</p>
     <div class="kpi-grid">
         <div class="kpi"><div class="kpi-value">6년+</div><div class="kpi-label">운영 실무 경력</div></div>
@@ -139,11 +225,11 @@ tr:last-child td { border-bottom: none; }
         <div class="kpi"><div class="kpi-value">전국 1위</div><div class="kpi-label">수련 평가 수상</div></div>
     </div>
     <div class="two-col">
-        <div>
+        <div class="panel">
             <div class="label">포지셔닝</div>
             <p class="body">임상 현장에서 길러진 문제 해결의 깊이와 IT 운영의 속도를 함께 구사합니다. 보수적 조직에 시스템을 안착시킨 변화 관리 경험과, NAVER WORKS 운영을 통해 확보한 B2B SaaS 릴리즈 · 파트너 · 정산 운영의 실무 이해를 갖추고 있습니다.</p>
         </div>
-        <div>
+        <div class="panel">
             <div class="label">운영 원칙</div>
             <p class="body muted">데이터 정합성을 운영의 기본값으로 둡니다.<br>이해관계자 간의 언어를 번역하는 것을 우선합니다.<br>변화는 관행이 아닌 근거로 설득합니다.</p>
         </div>
@@ -168,9 +254,9 @@ tr:last-child td { border-bottom: none; }
     <h1 class="headline">도메인을 관통하는 세 가지 역량.</h1>
     <p class="lead">임상과 운영 경험이 수렴하는 세 가지 전이 가능한 강점 — 기술 이해도, 변화 관리, 다이해관계자 커뮤니케이션.</p>
     <div class="three-col">
-        <div class="card"><h4>01  SaaS Lifecycle 이해</h4><p>NAVER WORKS 운영을 통해 릴리즈 사이클 · 파트너 정산 · 제품 커뮤니케이션에 대한 실무 감각을 확보했습니다.</p></div>
-        <div class="card"><h4>02  실전형 변화 관리</h4><p>보수적 조직에서 수기 관행을 데이터 기반 근거로 설득해 전산 시스템을 안착시킨 경험을 보유하고 있습니다.</p></div>
-        <div class="card"><h4>03  공공 · 민간 하이브리드 소통</h4><p>범정부 클라우드 전환 사업 현장 지원을 통해 임상·개발·파트너·공공 사이의 번역 역할을 수행했습니다.</p></div>
+        <div class="card"><div class="idx">01</div><h4>SaaS Lifecycle 이해</h4><p>NAVER WORKS 운영을 통해 릴리즈 사이클 · 파트너 정산 · 제품 커뮤니케이션에 대한 실무 감각을 확보했습니다.</p></div>
+        <div class="card"><div class="idx">02</div><h4>실전형 변화 관리</h4><p>보수적 조직에서 수기 관행을 데이터 기반 근거로 설득해 전산 시스템을 안착시킨 경험을 보유하고 있습니다.</p></div>
+        <div class="card"><div class="idx">03</div><h4>공공 · 민간 하이브리드 소통</h4><p>범정부 클라우드 전환 사업 현장 지원을 통해 임상·개발·파트너·공공 사이의 번역 역할을 수행했습니다.</p></div>
     </div>
     <br><br>
     <div class="label">역량 프로파일</div>
@@ -216,6 +302,11 @@ tr:last-child td { border-bottom: none; }
     </div>
 </section>
 
+
+<div class="footer">
+    <div>© 2026 김도연</div>
+    <div>Designed &amp; built with Claude Agent</div>
+</div>
 </main>
 </div>
 
@@ -329,7 +420,7 @@ projects.forEach(p => {
     const bullets = p.results.map(r => `<li>${r}</li>`).join('');
     plist.innerHTML += `
     <div class="project">
-        <div class="project-num">PROJECT ${p.num}  ·  ${p.company}</div>
+        <span class="project-num">PROJECT ${p.num}</span><span class="project-company">${p.company}</span>
         <div class="project-title">${p.title}</div>
         <div class="project-sub">${p.sub}</div>
         <div class="three-col">
